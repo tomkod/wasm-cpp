@@ -3,24 +3,18 @@
 
 : ${EMSDK_ROOT:?EMSDK_ROOT is not set: call source emscripten_setup}
 
-export BUILD_DIR=build_wasm
+export BUILDDIR=build_wasm
+export BUILDFILE=fib_test
+export DEPLOYDIR=deploy
 
 function say() {
     printf "\033[0;33m%s\033[0m\n" "$1"
 }
 
-function removeIfExist() {
-	if [[ -f "$1" ]]; then
-		say "rm $1"
-		rm "$1"
-	fi
-}
-
-function sayDo() {
+function say_run() {
 	say "$1"
 	$1
 }
-
 
 # Shared options
 EMCC_SHARED_OPTIONS=(
@@ -38,14 +32,14 @@ EMCC_SHARED_OPTIONS=(
     #                          # (But beware: excessively low values cause stack overflows in the program itself)
     -s DISABLE_EXCEPTION_CATCHING=0 # Let program catch exceptions
     -s ABORTING_MALLOC=0 -s ALLOW_MEMORY_GROWTH=1 # Allow dynamic memory resizing
-
-	-s ENVIRONMENT='worker'
 )
 
 EMCC_OPTIONS=(
     ${EMCC_SHARED_OPTIONS[@]}
 
-    -s EXPORT_NAME="'fib_test'"
+    -s ENVIRONMENT='worker'
+
+    -s EXPORT_NAME="'WASM_MODULE'"
 
 	-s EXPORTED_FUNCTIONS='["_main"]'
     -s 'EXTRA_EXPORTED_RUNTIME_METHODS=["FS","callMain"]'
@@ -69,21 +63,18 @@ EMCC_WASM_OPTIONS=(
     -s WASM_ASYNC_COMPILATION=0
 )
 
-mkdir -p ${BUILD_DIR}
-sayDo "rm -rf ${BUILD_DIR}/*"
-
-removeIfExist 'fib_test.js'
-removeIfExist 'fib_test.wasm'
-
-cd ${BUILD_DIR}
+mkdir -p ${BUILDDIR}
+cd ${BUILDDIR}
 
 emconfigure cmake ..
 emmake make -j6
-emcc "${EMCC_OPTIONS[@]}" "${EMCC_WASM_OPTIONS[@]}" ./libfib_test.a -o fib_test.js
-
-sayDo "mv fib_test.js .."
-sayDo "mv fib_test.wasm .."
+emcc "${EMCC_OPTIONS[@]}" "${EMCC_WASM_OPTIONS[@]}" ./lib${BUILDFILE}.a -o ${BUILDFILE}.js
 
 cd ..
 
-
+mkdir -p ${DEPLOYDIR}
+say_run "cp run_test.html ${DEPLOYDIR}/"
+say_run "cp run_test.js ${DEPLOYDIR}/"
+say_run "cp worker.js ${DEPLOYDIR}/"
+say_run "cp ${BUILDDIR}/${BUILDFILE}.js ${DEPLOYDIR}/"
+say_run "cp ${BUILDDIR}/${BUILDFILE}.wasm ${DEPLOYDIR}/"

@@ -1,23 +1,19 @@
-function runTest() {
+function runTest(args) {
 	var worker;
-
-    function postMessage(kind, payload) {
-        worker.postMessage({ kind: '['+kind+']', payload: payload });
-    }
 
 	function onMessage(event) {
         console.info("Worker → Window:");
-        var kind = event.data.kind;
-        var payload = event.data.payload;
-        console.log(kind, payload);
+        var channel = event.data.channel;
+        var message = event.data.message;
+        console.log(channel, message);
     }
 
-    function setupWorker() {
+    function setupWorker(args) {
         worker = new window.Worker("worker.js");
 		worker.onmessage = onMessage;
-		postMessage("cmd", "run");
+		worker.postMessage({cmd: 'run', args: args});
     }
 
-    setupWorker();
+    setupWorker(args);
 }
 

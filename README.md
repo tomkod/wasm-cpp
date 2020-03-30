@@ -19,8 +19,9 @@ The following scripts will download and build emscripten:
 
 ## Running example
 
-In fib_test folder:
+Start HTTP server from deploy folder:
 
+    cd fib_test/deploy
     python3 -m http.server
 
 In the browser, open:

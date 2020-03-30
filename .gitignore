@@ -1,6 +1,5 @@
 external*
 build*
+deploy*
 !build_wasm.sh
-fib_test/fib_test.js
-fib_test/fib_test.wasm
 
