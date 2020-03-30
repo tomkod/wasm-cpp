@@ -1,6 +1,5 @@
 # Check if "source emscripten_setup" was called before
 # and environment variables are set
-
 : ${EMSDK_ROOT:?EMSDK_ROOT is not set: call source emscripten_setup}
 
 export BUILDDIR=build_wasm
