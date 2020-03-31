@@ -1,4 +1,8 @@
-export BASEDIR="$(pwd)/"
+if [ -z ${BASEDIR+x} ]; then
+    echo "BASEDIR must be defined"
+    exit
+fi
+
 export EMSCRIPTEN_BUILDDIR="${BASEDIR}external/"
 export EMSCRIPTEN_TEMPDIR="/tmp/emscripten/"
 export EMSCRIPT_RELEASE="1.39.7"

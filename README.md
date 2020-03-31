@@ -2,7 +2,7 @@
 
 **author:** Tom
 
-**update:** 2020.03.30
+**update:** 2020.03.31
 
 ## Downloading and building emscripten
 
@@ -13,7 +13,6 @@ The following scripts will download and build emscripten:
 
 ## Compiling example
 
-    source emscripten_setup
     cd fib_test
     ./build_wasm.sh
 
@@ -35,7 +34,7 @@ and you should see (among other messages):
 
 ## Compiling (in general)
 
-Initialize environment variables
+Initialize environment variables:
 
     source emscripten_setup
 

@@ -1,10 +1,10 @@
-# Check if "source emscripten_setup" was called before
-# and environment variables are set
-: ${EMSDK_ROOT:?EMSDK_ROOT is not set: call source emscripten_setup}
+export PROJDIR="$(pwd)/"
+export BASEDIR="$(pwd)/../"
+source "${BASEDIR}emscripten_setup.inc"
 
-export BUILDDIR=build_wasm
-export BUILDFILE=fib_test
-export DEPLOYDIR=deploy
+export BUILDDIR="${PROJDIR}build_wasm/"
+export DEPLOYDIR="${PROJDIR}deploy/"
+export BUILDFILE="fib_test"
 
 function say() {
     printf "\033[0;33m%s\033[0m\n" "$1"
@@ -72,8 +72,8 @@ emcc "${EMCC_OPTIONS[@]}" "${EMCC_WASM_OPTIONS[@]}" ./lib${BUILDFILE}.a -o ${BUI
 cd ..
 
 mkdir -p ${DEPLOYDIR}
-say_run "cp run_test.html ${DEPLOYDIR}/"
-say_run "cp run_test.js ${DEPLOYDIR}/"
-say_run "cp worker.js ${DEPLOYDIR}/"
-say_run "cp ${BUILDDIR}/${BUILDFILE}.js ${DEPLOYDIR}/"
-say_run "cp ${BUILDDIR}/${BUILDFILE}.wasm ${DEPLOYDIR}/"
+say_run "cp run_test.html ${DEPLOYDIR}"
+say_run "cp run_test.js ${DEPLOYDIR}"
+say_run "cp worker.js ${DEPLOYDIR}"
+say_run "cp ${BUILDDIR}${BUILDFILE}.js ${DEPLOYDIR}"
+say_run "cp ${BUILDDIR}${BUILDFILE}.wasm ${DEPLOYDIR}"
